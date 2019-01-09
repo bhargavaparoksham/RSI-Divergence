@@ -1,6 +1,5 @@
 //@version=3
 //Author: Bhargav Aparoksham
-//Apparently there seems to be an issue with break in a for loop,for reference check previous versions
 
 
 study("RD", overlay = true)
