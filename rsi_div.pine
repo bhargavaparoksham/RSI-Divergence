@@ -1,0 +1,57 @@
+//@version=3
+//Author: Bhargav Aparoksham
+//Apparently there seems to be an issue with break in a for loop,for reference check previous versions
+
+
+study("RD", overlay = true)
+
+rsic(c) => //rsi custom
+    r = rsi(close[c],9)
+    r
+
+rsi_low(l) => //rsi minima
+    v = rsic(1)<l and rsic(0)>rsic(1) and rsic(2)>rsic(1)
+    v
+    
+rsi_high(h) => //rsi minima 
+    v = rsic(1)>h and rsic(0)<rsic(1) and rsic(2)<rsic(1)
+    v
+    
+rsi_gdiv() =>
+    a = false
+    b = barssince(rsi_low(30))
+    r1 = rsic(1)
+    r2 = valuewhen(b==0, rsic(1), 1)
+    r3 = valuewhen(b==0, rsic(1), 2)
+    p1 = close[1]
+    p2 = valuewhen(b==0, close[1], 1)
+    p3 = valuewhen(b==0, close[1], 2)
+    if rsi_low(30) and b[1]<5 and r1>r2 and p1<p2    //bull div
+        a := true
+    if rsi_low(30) and b[1]<5 and r1>r3 and p1<p3    //bull div
+        a := true
+    a
+
+rsi_rdiv() =>
+    a = false
+    b = barssince(rsi_high(70))
+    r1 = rsic(1)
+    r2 = valuewhen(b==0, rsic(1), 1)
+    r3 = valuewhen(b==0, rsic(1), 2)
+    p1 = close[1]
+    p2 = valuewhen(b==0, close[1], 1)
+    p3 = valuewhen(b==0, close[1], 2)
+    if rsi_high(70) and b[1]<5 and r1<r2 and p1>p2   //bear div
+        a := true
+    if rsi_high(70) and b[1]<5 and r1<r3 and p1>p3   //bear div
+        a := true
+    a
+    
+
+plotshape(rsi_low(30), style=shape.triangleup,location=location.belowbar, color=orange)
+plotshape(rsi_gdiv(), style=shape.triangleup,location=location.belowbar, color=white)
+
+plotshape(rsi_high(70), style=shape.triangledown,location=location.abovebar, color=orange)
+plotshape(rsi_rdiv(), style=shape.triangledown,location=location.abovebar, color=white)
+
+//plot(rsi_rdiv())
